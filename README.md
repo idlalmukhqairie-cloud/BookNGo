@@ -14,7 +14,20 @@ Tables: `users`, `movies`, `cinemas`, `showtimes`, `bookings`, `booking_seats`. 
 
 ## Deployment
 
-Vercel cannot run this application because the backend is PHP (`api/*.php`, `admin/index.php`). Host it on a PHP-capable platform (Railway, Render, or a cPanel host) and use a managed MySQL service such as Aiven for the database.
+The app supports Vercel using the community PHP runtime configured in `vercel.json`, or a PHP-capable platform such as Railway, Render, or a cPanel host. Use a managed MySQL service such as Aiven for the database.
+
+### Vercel + Aiven
+
+1. Create your Aiven MySQL service, download its CA certificate, and import `database/setup.sql` using the Aiven instructions below. For an existing database, import only `database/sessions.sql` to add shared sessions without refreshing the demo catalogue.
+2. Import this repository into Vercel. Select framework **Other**, leave the build command unset, and leave the output directory unset (the project root serves the site).
+3. In **Settings > Environment Variables**, add the seven `BOOKNGO_DB_*` values in the Aiven table below for the environments you want to deploy. For `BOOKNGO_DB_SSL_CA`, paste the complete downloaded PEM certificate, including its BEGIN/END lines. A local Windows certificate path will not work on Vercel.
+4. Deploy or redeploy after saving the variables. Open the homepage, create an account, refresh, and confirm login persists. Test the admin panel under `/admin/`.
+
+`vercel.json` uses `vercel-php@0.9.0`, routes the admin page through a PHP function, and blocks private configuration and database URLs. `.vercelignore` excludes local secrets and database exports. Vercel does not use Apache `.htaccess` rules.
+
+Vercel sessions are stored in the `bookngo_sessions` MySQL table because local files are not shared between function instances. The table must exist before the first request. Other hosts keep PHP file sessions by default; set `BOOKNGO_SESSION_DRIVER=mysql` to use shared sessions there too. Keep Vercel system environment variables enabled so the app detects `VERCEL=1`.
+
+Runtime reference: https://github.com/vercel-community/php
 
 The included `Dockerfile` runs PHP 8.2 + Apache and listens on `$PORT`, so Railway and Render can deploy it directly. `render.yaml` is a Render Blueprint; enter the secret values in the dashboard when prompted.
 
@@ -57,7 +70,7 @@ Get-Content database\setup.sql -Raw | C:\xampp\mysql\bin\mysql.exe `
 
 The session cookie path is calculated from the request, so the app works both at `http://localhost/BookNGo/` and at a domain root.
 
-> Vercel can store the same variables, but it cannot execute the PHP endpoints. Use it only with a reimplemented Node backend.
+On Vercel, use the bundled PHP runtime configuration and shared-session table described above.
 
 ## Features
 

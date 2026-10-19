@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     Prompts for anything you do not pass in. The password is read securely and is
-    only exported to the mysql client through the MYSQL_PWD variable, so it never
+    only exported to the PHP importer through a temporary environment variable, so it never
     appears on the command line.
 
 .EXAMPLE
@@ -30,40 +30,44 @@ if (-not $Port)     { $Port = Read-Host 'Port' }
 if (-not $User)     { $User = Read-Host 'User (press Enter for avnadmin)'; if (-not $User) { $User = 'avnadmin' } }
 if (-not $Database) { $Database = Read-Host 'Database (press Enter for bookngo)'; if (-not $Database) { $Database = 'bookngo' } }
 
-$mysql = 'C:\xampp\mysql\bin\mysql.exe'
-if (-not (Test-Path $mysql)) { $mysql = 'mysql' }
-
-$secure = Read-Host "Password for $User" -AsSecureString
-$env:MYSQL_PWD = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
-    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
-
-# XAMPP ships the MariaDB client, which uses --ssl instead of --ssl-mode.
-$sslArgs = @('--ssl')
-if ($CaPath) {
-    $sslArgs += "--ssl-ca=$CaPath"
-    $sslArgs += '--ssl-verify-server-cert'
+if ($Database -notmatch '^[a-zA-Z0-9_]+$') { throw 'Database name must contain only letters, numbers and underscores.' }
+if (-not $CaPath) { $CaPath = Read-Host 'Full path to the downloaded Aiven ca.pem certificate' }
+$CaPath = $CaPath.Trim()
+# Windows "Copy as path" includes quotes; Read-Host keeps those literally.
+if ($CaPath.Length -ge 2 -and (
+    ($CaPath.StartsWith('"') -and $CaPath.EndsWith('"')) -or
+    ($CaPath.StartsWith("'") -and $CaPath.EndsWith("'"))
+)) {
+    $CaPath = $CaPath.Substring(1, $CaPath.Length - 2).Trim()
 }
+$CaPath = (Resolve-Path -LiteralPath $CaPath -ErrorAction Stop).Path
+
+# PHP 8.2's mysqlnd supports Aiven authentication; XAMPP's MariaDB CLI may not.
+$php = 'C:\xampp\php\php.exe'
+if (-not (Test-Path -LiteralPath $php)) { $php = (Get-Command php -ErrorAction Stop).Source }
+$temporaryEnv = @{
+    BOOKNGO_DB_HOST = $Server
+    BOOKNGO_DB_PORT = $Port
+    BOOKNGO_DB_NAME = $Database
+    BOOKNGO_DB_USER = $User
+    BOOKNGO_DB_SSL = 'true'
+    BOOKNGO_DB_SSL_CA = $CaPath
+    BOOKNGO_DB_SSL_VERIFY = 'true'
+    BOOKNGO_IMPORT_SKIP_CREATE = ([int][bool]$SkipCreateDatabase).ToString()
+    BOOKNGO_DB_PASSWORD = ''
+}
+$previousEnv = @{}
+foreach ($key in $temporaryEnv.Keys) { $previousEnv[$key] = [Environment]::GetEnvironmentVariable($key, 'Process') }
 
 try {
-    if (-not $SkipCreateDatabase) {
-        Write-Host "Creating database $Database ..."
-        & $mysql --host=$Server --port=$Port --user=$User @sslArgs `
-            -e "CREATE DATABASE IF NOT EXISTS $Database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-        if ($LASTEXITCODE -ne 0) { throw "Could not create the database (exit code $LASTEXITCODE)." }
-    }
-
-    Write-Host 'Importing setup.sql ...'
-    Get-Content -Raw (Join-Path $PSScriptRoot 'setup.sql') | & $mysql `
-        --host=$Server --port=$Port --user=$User @sslArgs $Database
-    if ($LASTEXITCODE -ne 0) { throw "Import failed (exit code $LASTEXITCODE)." }
-
-    Write-Host 'Verifying ...'
-    & $mysql --host=$Server --port=$Port --user=$User @sslArgs $Database `
-        -e 'SHOW TABLES; SELECT COUNT(*) AS movies FROM movies;'
-    if ($LASTEXITCODE -ne 0) { throw "Verification failed (exit code $LASTEXITCODE)." }
-
-    Write-Host 'Done. The Aiven database is ready.'
+    foreach ($key in $temporaryEnv.Keys) { [Environment]::SetEnvironmentVariable($key, $temporaryEnv[$key], 'Process') }
+    $secure = Read-Host "Password for $User" -AsSecureString
+    $passwordPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    try { $env:BOOKNGO_DB_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($passwordPointer) }
+    finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($passwordPointer) }
+    & $php (Join-Path $PSScriptRoot 'import-aiven.php')
+    if ($LASTEXITCODE -ne 0) { throw "Aiven import failed (exit code $LASTEXITCODE)." }
 }
 finally {
-    Remove-Item Env:MYSQL_PWD -ErrorAction SilentlyContinue
+    foreach ($key in $temporaryEnv.Keys) { [Environment]::SetEnvironmentVariable($key, $previousEnv[$key], 'Process') }
 }

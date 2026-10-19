@@ -1,0 +1,13 @@
+.git
+.checks
+.hallmark
+.env
+.env.*
+.vercel
+database
+Dockerfile
+render.yaml
+README.md
+config/ca.pem
+config/database.local.php
+*.log

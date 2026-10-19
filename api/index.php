@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/../config/connect.php';
+require_once __DIR__.'/../config/session.php';
 date_default_timezone_set('Asia/Kuala_Lumpur');
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 ini_set('display_errors', '0');
-session_name('bookngo_session');
-session_set_cookie_params(['httponly'=>true,'secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','samesite'=>'Lax','path'=>bookngo_cookie_path()]);
-session_start();
-$_SESSION['csrf'] ??= bin2hex(random_bytes(32));
 function respond(array $data,int $status=200): never { http_response_code($status); echo json_encode($data,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR); exit; }
 function fail(string $message,int $status=400): never { respond(['error'=>$message],$status); }
 function authenticated(): int {
@@ -25,6 +22,8 @@ function bookings(PDO $pdo,int $userId): array {
  foreach($rows as &$b){$seats->execute([$b['internal_id']]);$b['seats']=$seats->fetchAll(PDO::FETCH_COLUMN);unset($b['internal_id']);$b['total']=(float)$b['total'];$b['cancelled']=$b['status']==='cancelled';} return $rows;
 }
 try {
+ bookngo_start_session();
+ $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
  $config=require __DIR__.'/../config/database.php';
  $pdo=bookngo_pdo($config);
  $pdo->exec("SET time_zone = '+08:00'");

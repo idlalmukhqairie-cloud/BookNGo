@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.9.0",
+      "includeFiles": "{config,admin}/**"
+    },
+    "api/dashboard.php": {
+      "runtime": "vercel-php@0.9.0",
+      "includeFiles": "{config,admin}/**"
+    }
+  },
+  "routes": [
+    { "src": "/(?:config|database|\\.checks|\\.git|\\.vercel)(?:/.*)?", "status": 403 },
+    { "src": "/(?:\\..*|Dockerfile|render\\.yaml|README\\.md|vercel\\.json)", "status": 403 },
+    { "src": "/admin", "status": 308, "headers": { "Location": "/admin/" } },
+    { "src": "/admin/(?:index\\.php)?", "dest": "/api/dashboard.php" },
+    { "src": "/api/index\\.php", "dest": "/api/index.php" },
+    { "src": "/.*\\.php", "status": 404 },
+    { "handle": "filesystem" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/.*", "status": 404 }
+  ]
+}

@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/../config/connect.php';
-session_name('bookngo_session');
-session_set_cookie_params(['httponly'=>true,'secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','samesite'=>'Lax','path'=>bookngo_cookie_path()]);
-session_start();
+require_once __DIR__.'/../config/session.php';
 header('Cache-Control: no-store');
-if(empty($_SESSION['user_id'])){header('Location: ../#home');exit;}
 try {
+ bookngo_start_session();
+ if(empty($_SESSION['user_id'])){header('Location: ../#home');exit;}
  $c=require __DIR__.'/../config/database.php';
  $p=bookngo_pdo($c);
  $q=$p->prepare('SELECT role FROM users WHERE id=?');$q->execute([$_SESSION['user_id']]);

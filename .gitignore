@@ -27,3 +27,5 @@ npm-debug.log*
 
 # Agent/tooling metadata, not part of the application
 .hallmark/
+.vercel/
+config/ca.pem
