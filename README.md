@@ -23,7 +23,13 @@ The included `Dockerfile` runs PHP 8.2 + Apache and listens on `$PORT`, so Railw
 1. Create an **Aiven for MySQL** service and wait until its status is **Running**.
 2. From **Quick connect**, copy the host, port, user (`avnadmin`), password, and database name.
 3. Download the CA certificate (`ca.pem`) from the connection details.
-4. Create the `bookngo` database and import the schema (XAMPP's MariaDB client uses `--ssl`; the Oracle MySQL client uses `--ssl-mode=REQUIRED`):
+4. Create the `bookngo` database and import the schema. Either run the helper script:
+
+```powershell
+.\database\import-aiven.ps1 -Server HOST -Port PORT -CaPath C:\path\to\ca.pem
+```
+
+Or run the commands yourself (XAMPP's MariaDB client uses `--ssl`; the Oracle MySQL client uses `--ssl-mode=REQUIRED`):
 
 ```powershell
 C:\xampp\mysql\bin\mysql.exe --host=HOST --port=PORT --user=avnadmin --password `
