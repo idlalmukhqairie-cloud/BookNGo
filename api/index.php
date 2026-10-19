@@ -40,7 +40,7 @@ try {
  if(str_starts_with($action,'admin_')) {define('BOOKNGO_ADMIN_ROUTER',true);require __DIR__.'/admin.php';}
  if($action==='bootstrap') {
   $u=null;if(!empty($_SESSION['user_id'])){$q=$pdo->prepare('SELECT id,name,email,role FROM users WHERE id=?');$q->execute([$_SESSION['user_id']]);$u=$q->fetch()?:null;}
-  $movies=$pdo->query('SELECT id,title,genre,IF(duration_minutes=0,"TBC",CONCAT(duration_minutes," min")) AS length,age_rating AS age,price,poster,backdrop,description,status FROM movies WHERE is_active=1 ORDER BY sort_order')->fetchAll();
+  $movies=$pdo->query("SELECT id,title,genre,IF(duration_minutes=0,'TBC',CONCAT(duration_minutes,' min')) AS length,age_rating AS age,price,poster,backdrop,description,status FROM movies WHERE is_active=1 ORDER BY sort_order")->fetchAll();
   foreach($movies as &$movie){$movie['price']=(float)$movie['price'];}unset($movie);
   $shows=$pdo->query("SELECT s.id,s.movie_id AS film,c.name AS cinema,DATE(s.starts_at) AS date,TIME_FORMAT(s.starts_at,'%H:%i') AS time FROM showtimes s JOIN cinemas c ON c.id=s.cinema_id JOIN movies m ON m.id=s.movie_id WHERE s.starts_at>NOW() AND s.is_active=1 AND c.is_active=1 AND m.is_active=1 AND m.status='showing' ORDER BY s.starts_at,FIELD(c.name,'BookNGo · Kuala Lumpur','BookNGo · Perak','BookNGo · Selangor','BookNGo · Kelantan','BookNGo · Terengganu'),s.id")->fetchAll();
   respond(['user'=>$u,'csrf'=>$_SESSION['csrf'],'movies'=>$movies,'showtimes'=>$shows,'bookings'=>$u?bookings($pdo,(int)$u['id']):[]]);
