@@ -12,6 +12,47 @@ This creates the database and tables, imports ten selected films and five cinema
 
 Tables: `users`, `movies`, `cinemas`, `showtimes`, `bookings`, `booking_seats`. `database/schema.sql` contains the schema; `database/movies.json` contains sample films. Runtime database credentials can also be supplied with `BOOKNGO_DB_HOST`, `BOOKNGO_DB_PORT`, `BOOKNGO_DB_NAME`, `BOOKNGO_DB_USER`, and `BOOKNGO_DB_PASSWORD` environment variables. Local XAMPP defaults use root with no password; use a dedicated database user and HTTPS when deploying.
 
+## Deployment
+
+Vercel cannot run this application because the backend is PHP (`api/*.php`, `admin/index.php`). Host it on a PHP-capable platform (Railway, Render, or a cPanel host) and use a managed MySQL service such as Aiven for the database.
+
+The included `Dockerfile` runs PHP 8.2 + Apache and listens on `$PORT`, so Railway and Render can deploy it directly. `render.yaml` is a Render Blueprint; enter the secret values in the dashboard when prompted.
+
+### Aiven MySQL
+
+1. Create an **Aiven for MySQL** service and wait until its status is **Running**.
+2. From **Quick connect**, copy the host, port, user (`avnadmin`), password, and database name.
+3. Download the CA certificate (`ca.pem`) from the connection details.
+4. Create the `bookngo` database and import the schema (XAMPP's MariaDB client uses `--ssl`; the Oracle MySQL client uses `--ssl-mode=REQUIRED`):
+
+```powershell
+C:\xampp\mysql\bin\mysql.exe --host=HOST --port=PORT --user=avnadmin --password `
+  --ssl --ssl-ca=C:\path\to\ca.pem `
+  -e "CREATE DATABASE IF NOT EXISTS bookngo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+Get-Content database\setup.sql -Raw | C:\xampp\mysql\bin\mysql.exe `
+  --host=HOST --port=PORT --user=avnadmin --password `
+  --ssl --ssl-ca=C:\path\to\ca.pem bookngo
+```
+
+5. Set these environment variables on the hosting provider:
+
+| Variable | Value |
+| --- | --- |
+| `BOOKNGO_DB_HOST` | Aiven host |
+| `BOOKNGO_DB_PORT` | Aiven port |
+| `BOOKNGO_DB_NAME` | `bookngo` |
+| `BOOKNGO_DB_USER` | `avnadmin` |
+| `BOOKNGO_DB_PASSWORD` | Aiven password |
+| `BOOKNGO_DB_SSL` | `true` |
+| `BOOKNGO_DB_SSL_CA` | Path to `ca.pem`, or the PEM text itself |
+
+`BOOKNGO_DB_SSL_CA` accepts either a filesystem path or the certificate contents. If `config/ca.pem` exists, it is used automatically. `BOOKNGO_DB_SSL_VERIFY` defaults to `true`; do not disable it in production.
+
+The session cookie path is calculated from the request, so the app works both at `http://localhost/BookNGo/` and at a domain root.
+
+> Vercel can store the same variables, but it cannot execute the PHP endpoints. Use it only with a reimplemented Node backend.
+
 ## Features
 
 ### Super Admin

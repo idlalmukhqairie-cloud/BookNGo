@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: bookngo
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: BOOKNGO_DB_HOST
+        sync: false
+      - key: BOOKNGO_DB_PORT
+        sync: false
+      - key: BOOKNGO_DB_NAME
+        value: bookngo
+      - key: BOOKNGO_DB_USER
+        value: avnadmin
+      - key: BOOKNGO_DB_PASSWORD
+        sync: false
+      - key: BOOKNGO_DB_SSL
+        value: "true"
+      - key: BOOKNGO_DB_SSL_CA
+        sync: false

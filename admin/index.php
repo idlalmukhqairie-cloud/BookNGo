@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__.'/../config/connect.php';
 session_name('bookngo_session');
-session_set_cookie_params(['httponly'=>true,'secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','samesite'=>'Lax','path'=>'/BookNGo/']);
+session_set_cookie_params(['httponly'=>true,'secure'=>!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!=='off','samesite'=>'Lax','path'=>bookngo_cookie_path()]);
 session_start();
 header('Cache-Control: no-store');
 if(empty($_SESSION['user_id'])){header('Location: ../#home');exit;}
 try {
  $c=require __DIR__.'/../config/database.php';
- $p=new PDO("mysql:host={$c['host']};port={$c['port']};dbname={$c['name']};charset=utf8mb4",$c['user'],$c['password'],[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+ $p=bookngo_pdo($c);
  $q=$p->prepare('SELECT role FROM users WHERE id=?');$q->execute([$_SESSION['user_id']]);
  if($q->fetchColumn()!=='admin'){header('Location: ../#home');exit;}
 }catch(Throwable $e){http_response_code(503);exit('Database unavailable. Please start MySQL and refresh.');}
