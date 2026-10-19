@@ -1,0 +1,64 @@
+/* Hallmark · BookNGo navigation refinement · existing Midnight theme */
+.header {
+  height:104px;
+  padding:0 5.5%;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:32px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--color-paper);
+  background-image:linear-gradient(var(--color-nav-shade),var(--color-nav-shade)),url('image/banner.jpeg');
+  background-size:cover;
+  background-position:center 8%;
+  background-repeat:no-repeat;
+  border-bottom:1px solid var(--color-line);
+}
+.header>.brand{font-size:32px;letter-spacing:-1.3px;font-weight:800;line-height:1}
+.header .brand-icon{width:40px;height:44px;margin-right:12px;font-size:30px;border-radius:var(--radius-sm)}
+.header #navigation{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;min-width:0}
+.header #navigation a{font-size:16px;font-weight:600;line-height:1;min-height:52px;padding:16px 20px;border-radius:var(--radius-sm);color:var(--color-ink);transition:background-color var(--dur-short) var(--ease-out),color var(--dur-short) var(--ease-out)}
+.header #navigation a:hover{color:var(--color-ink);background:var(--color-panel)}
+.header #navigation a:active{background:var(--color-raised)}
+.header #navigation a[aria-current]{background:var(--color-panel);color:var(--color-ink)}
+.header #navigation a[aria-current]:after{content:'';position:absolute;bottom:5px;left:20px;right:auto;width:24px;height:3px;border-radius:var(--radius-sm);background:var(--color-accent-hover)}
+.header #account-button{min-height:52px;min-width:120px;font-size:15px;padding:16px 24px;gap:16px;border-radius:var(--radius-sm);line-height:1}
+.header #account-button span{font-size:19px}
+.header .menu-toggle{display:none;min-width:44px;min-height:44px;align-items:center;justify-content:center;border:1px solid var(--color-line);border-radius:var(--radius-sm);font-size:23px;line-height:1;padding:8px}
+.header .menu-toggle:hover,.header .menu-toggle[aria-expanded=true]{background:var(--color-raised)}
+.header .menu-toggle:active{background:var(--color-panel)}
+@media(max-width:1100px) and (min-width:961px){
+ .header{padding:0 4%;gap:24px}
+ .header>.brand{font-size:29px}
+ .header #navigation a{font-size:15px;padding:16px}
+ .header #navigation a[aria-current]:after{left:16px}
+}
+@media(max-width:960px){
+ .header{height:88px;padding:0 24px;grid-template-columns:minmax(0,1fr) auto auto;gap:16px}
+ .header>.brand{font-size:28px}
+ .header .brand-icon{width:34px;height:38px;font-size:26px;margin-right:10px}
+ .header .menu-toggle{display:flex;grid-column:3;grid-row:1;order:initial}
+ .header #account-button{grid-column:2;grid-row:1;min-width:100px;min-height:48px;padding:12px 20px;font-size:14px;margin:0}
+ .header #navigation{display:none;position:absolute;top:88px;left:0;right:0;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;padding:12px 24px 20px;background:var(--color-paper);border-bottom:1px solid var(--color-line);box-shadow:0 16px 24px var(--color-shadow)}
+ .header #navigation.open{display:flex}
+ .header #navigation{background-image:linear-gradient(var(--color-nav-menu-shade),var(--color-nav-menu-shade)),url('image/banner.jpeg');background-size:cover;background-position:center 8%}
+ .header #navigation a{font-size:16px;padding:16px 20px;min-height:52px}
+ .header #navigation a[aria-current]:after{left:auto;right:20px;top:50%;bottom:auto;transform:translateY(-50%);width:6px;height:6px;border-radius:50%}
+}
+@media(max-width:480px){
+ .header{padding:0 16px;gap:8px}
+ .header>.brand{font-size:26px}
+ .header #account-button{min-width:84px;padding:12px 14px;gap:8px;font-size:13px}
+ .header #navigation{padding:12px 16px 20px}
+}
+@media(max-width:380px){
+ .header{height:80px}
+ .header>.brand{font-size:22px;letter-spacing:-.8px}
+ .header .brand-icon{width:28px;height:32px;font-size:23px;margin-right:8px}
+ .header #account-button{min-width:76px;padding:12px;min-height:44px}
+ .header #account-button span{font-size:16px}
+ .header #navigation{top:80px}
+}
+@media(prefers-reduced-motion:reduce){.header #navigation a{transition:none}}

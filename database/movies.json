@@ -1,0 +1,112 @@
+[
+  {
+    "id": "street-fighter",
+    "title": "Street Fighter",
+    "genre": "Action",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 22,
+    "poster": "image/Street%20Fighter%20.jpg",
+    "description": "Choose your fighter. Bring the arcade energy to your next big-screen movie night.",
+    "status": "showing"
+  },
+  {
+    "id": "other-mommy",
+    "title": "Other Mommy",
+    "genre": "Horror",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 20,
+    "poster": "image/OTHER%20MOMMY.jpeg",
+    "description": "Make room for a chilling horror movie night with Other Mommy.",
+    "status": "showing"
+  },
+  {
+    "id": "avengers-doomsday",
+    "title": "Avengers: Doomsday",
+    "genre": "Action / Sci-Fi",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 24,
+    "poster": "https://i.abcnewsfe.com/a/0c097b14-4cb4-4ca8-ba88-e770a1d3d4dd/avengers-poster_1766515462943_hpEmbed_2x3.jpg",
+    "description": "The Avengers return for another big-screen event. Watch this space for demo showtimes.",
+    "status": "soon"
+  },
+  {
+    "id": "clayface",
+    "title": "Clayface",
+    "genre": "Horror / Thriller",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 22,
+    "poster": "https://pbs.twimg.com/media/HGhTNnTbUAAOeeG.jpg?name=orig",
+    "description": "Discover the darker side of Gotham with Clayface.",
+    "status": "soon"
+  },
+  {
+    "id": "resident-evil",
+    "title": "Resident Evil",
+    "genre": "Horror",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 22,
+    "poster": "https://d9s3e2ooa0od7.cloudfront.net/assets/resident-evil/4569e7e0-a5b5-4b5b-84fc-2c39ede8ac67/4569e7e0-a5b5-4b5b-84fc-2c39ede8ac67.jpg",
+    "description": "Step into survival horror with Resident Evil. Pick your seats for a tense night at the movies.",
+    "status": "showing"
+  },
+  {
+    "id": "juminten-edan",
+    "title": "Juminten Edan",
+    "genre": "Horror",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 18,
+    "poster": "image/Juminten%20Edan.jpg",
+    "description": "Add Indonesian horror to your movie night with Juminten Edan.",
+    "status": "showing"
+  },
+  {
+    "id": "whalefall",
+    "title": "Whalefall",
+    "genre": "Thriller",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 20,
+    "poster": "image/Whalefall.jpeg",
+    "description": "Take a deep dive into your next big-screen thriller with Whalefall.",
+    "status": "showing"
+  },
+  {
+    "id": "avengers-endgame",
+    "title": "Avengers: Endgame",
+    "genre": "Action / Sci-Fi",
+    "length": "181 min",
+    "age": "TBC",
+    "price": 22,
+    "poster": "or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+    "description": "Assemble your friends for an Avengers: Endgame screening in our demo programme.",
+    "status": "showing"
+  },
+  {
+    "id": "spider-man-brand-new-day",
+    "title": "Spider-Man: Brand New Day",
+    "genre": "Action / Adventure",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 22,
+    "poster": "https://imagecinepolisgcc.enpointe.io/uploads/images/movies/1782028871177-movie_image1_1782028869987.jpg",
+    "description": "A brand new movie night starts here. Catch Spider-Man on the big screen.",
+    "status": "showing"
+  },
+  {
+    "id": "khong-khaek-2",
+    "title": "Khong Khaek 2",
+    "genre": "Horror",
+    "length": "TBC",
+    "age": "TBC",
+    "price": 18,
+    "poster": "image/Khong%20Khaek%202.jpeg",
+    "description": "Settle in for Thai supernatural horror with Khong Khaek 2.",
+    "status": "showing"
+  }
+]

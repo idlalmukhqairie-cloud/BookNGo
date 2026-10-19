@@ -1,0 +1,28 @@
+# OS clutter
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.sublime-workspace
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.bak
+logs/
+
+# Local environment overrides (never commit real credentials)
+.env
+.env.*
+config/database.local.php
+
+# Node tooling (only used by the .checks scripts)
+node_modules/
+npm-debug.log*
+
+# Agent/tooling metadata, not part of the application
+.hallmark/

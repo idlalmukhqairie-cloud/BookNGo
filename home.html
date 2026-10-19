@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#18181d">
+  <meta name="description" content="BookNGo cinema booking prototype. Discover films, choose your seats and keep your demo tickets in one place.">
+  <title>BookNGo — Your next big-screen escape</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="navbar.css"><script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
+    <a class="brand" href="#home" aria-label="BookNGo home"><span class="brand-icon" aria-hidden="true">B</span>Book<span>N</span>Go<span class="brand-dot">.</span></a>
+    <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="navigation">☰</button>
+    <nav id="navigation" aria-label="Main navigation">
+      <a href="#home" data-page="home">Home</a><a href="#movies" data-page="movies">Movies</a><a href="#bookings" data-page="bookings">My Bookings</a><a href="#about" data-page="about">About Us</a>
+    </nav>
+    <button id="account-button" class="button small">Login <span aria-hidden="true">↗</span></button>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer><a class="brand" href="#home">Book<span>N</span>Go.</a><p>Less planning. More movie magic.</p><span>© <span id="year"></span> BookNGo · Demo website</span></footer>
+  <dialog id="auth-dialog" aria-labelledby="auth-title">
+    <button class="close" aria-label="Close login" data-close>×</button>
+    <span class="dialog-mark" aria-hidden="true">B.</span><h2 id="auth-title">Your next movie awaits.</h2>
+    <p>Log in to access your saved bookings.</p>
+    <form id="login-form">
+      <div id="register-name" hidden><label for="login-name">Your name</label><input id="login-name" name="name" autocomplete="name" placeholder="e.g. Adam" maxlength="60"></div>
+      <label for="login-email">Email address</label><input id="login-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="160">
+      <label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" placeholder="At least 8 characters" required>
+      <p class="form-error" id="login-error" role="alert"></p><button id="auth-submit" class="button wide" type="submit">Login <span aria-hidden="true">→</span></button>
+      <button id="auth-switch" class="text-link auth-switch" type="button">New to BookNGo? Create account</button><small>Bookings are saved to your account. This is a demo cinema programme; no payment is taken.</small>
+    </form>
+  </dialog>
+  <dialog id="booking-dialog" class="booking-dialog" aria-labelledby="booking-title"></dialog>
+  <div id="notice" role="status" aria-live="polite"></div>
+</body>
+</html>
