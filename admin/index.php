@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+ini_set('display_errors', '0');
 require_once __DIR__.'/../config/connect.php';
 require_once __DIR__.'/../config/session.php';
 header('Cache-Control: no-store');
@@ -10,7 +11,7 @@ try {
  $p=bookngo_pdo($c);
  $q=$p->prepare('SELECT role FROM users WHERE id=?');$q->execute([$_SESSION['user_id']]);
  if($q->fetchColumn()!=='admin'){header('Location: ../#home');exit;}
-}catch(Throwable $e){http_response_code(503);exit('Database unavailable. Please start MySQL and refresh.');}
+}catch(Throwable $e){error_log('BookNGo admin: '.$e->getMessage());http_response_code(503);exit('Database service unavailable. Please try again shortly.');}
 session_write_close();
 ?>
 <!doctype html>

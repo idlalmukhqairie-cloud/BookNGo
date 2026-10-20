@@ -40,9 +40,15 @@ function bookngo_pdo(array $config): PDO
         }
 
         if ($ca !== '') {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $ca;
+            $sslCaAttribute = defined('Pdo\\Mysql::ATTR_SSL_CA')
+                ? constant('Pdo\\Mysql::ATTR_SSL_CA')
+                : PDO::MYSQL_ATTR_SSL_CA;
+            $options[$sslCaAttribute] = $ca;
         }
-        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)($config['ssl_verify'] ?? true);
+        $sslVerifyAttribute = defined('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+            ? constant('Pdo\\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+            : PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+        $options[$sslVerifyAttribute] = (bool)($config['ssl_verify'] ?? true);
     }
 
     return new PDO($dsn, $config['user'], $config['password'], $options);
